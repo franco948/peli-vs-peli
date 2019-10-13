@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/franco948/peli-vs-peli#readme",
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "mysql": "^2.17.1"
   }
 }
