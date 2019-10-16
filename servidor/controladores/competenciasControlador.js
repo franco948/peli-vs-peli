@@ -40,14 +40,17 @@ var competenciasControlador = {
                 return res.status(500).send("Hubo un error en la consulta");
             }
 
+            if (competencias.length === 0) {
+                console.log("No se encontro ninguna competencia con ese id");
+                return res.status(404).send("No se encontro ninguna competencia con ese id");
+            }
+         
             con.query(sqlPeliculas, function(error, peliculas, fields) {
                 //si hubo un error, se informa y se envía un mensaje de error
                 if (error) {
                     console.log("Hubo un error en la consulta", error.message);
                     return res.status(500).send("Hubo un error en la consulta");
-                }
-    
-                console.log(peliculas);
+                }               
 
                 //si no hubo error, se crea el objeto respuesta con las canciones encontradas
                 var respuesta = {
