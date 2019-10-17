@@ -180,6 +180,57 @@ var competenciasControlador = {
                 res.send('Competencia agregada con exito!');
             });
         });
+    },
+
+    reiniciarCompetencia: function(req, res)
+    {
+        var idCompetencia = req.params.id;
+
+        console.log(idCompetencia);
+        
+        var sqlCompetencia = "SELECT * FROM competencia WHERE id = ?";
+        var sqlReiniciar = "DELETE FROM voto WHERE competencia_id = ?";
+
+        con.query(sqlCompetencia, [idCompetencia], function(error, competencias, fields) {
+            if (error) {
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(500).send("Hubo un error en la consulta");
+            }
+            if (competencias.length == 0) {
+                console.log("No se encontro ninguna competencia con ese id");
+                return res.status(404).send("No se encontro ninguna competencia con ese id");
+            } 
+
+            con.query(sqlReiniciar, [idCompetencia], function(error, resultado, fields) {
+                if (error) {
+                    console.log("Hubo un error en la consulta", error.message);
+                    return res.status(500).send("Hubo un error en la consulta");
+                }
+    
+                res.send('Competencia reiniciada con exito!');
+            });    
+        });
+    },
+
+    buscarCompetencia: function(req, res)
+    {
+        var idCompetencia = req.params.id;
+        var sql = "select * from competencia where id = ?";
+
+        con.query(sql, [idCompetencia], function(error, resultado, fields) {
+            if (error) {
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(500).send("Hubo un error en la consulta");
+            }
+            if (resultado.length == 0) {
+                console.log("No se encontro ninguna competencia con ese id");
+                return res.status(404).send("No se encontro ninguna competencia con ese id");
+            }
+
+            var response = resultado[0];
+
+            res.send(JSON.stringify(response));
+        });
     }
 }
 

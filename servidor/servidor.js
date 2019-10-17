@@ -23,7 +23,8 @@ app.get('/competencias/:id/peliculas', competenciasControlador.obtenerOpciones);
 app.post('/competencias/:id/voto', competenciasControlador.votar);
 app.get('/competencias/:id/resultados', competenciasControlador.obtenerResultados);
 app.post('/competencias', competenciasControlador.agregarCompetencia);
-
+app.delete('/competencias/:id/votos', competenciasControlador.reiniciarCompetencia);
+app.get('/competencias/:id', competenciasControlador.buscarCompetencia)
 
 //seteamos el puerto en el cual va a escuchar los pedidos la aplicación
 var puerto = '8080';
