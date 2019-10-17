@@ -29,8 +29,9 @@ var competenciasControlador = {
     obtenerOpciones: function(req, res)
     {
         var competenciaId = req.params.id;
-        var sqlPeliculas = "SELECT * FROM pelicula ORDER BY rand() LIMIT 2";
+        var sqlPeliculas = "SELECT * FROM pelicula WHERE (genero_id = ? OR ? IS null) ORDER BY rand() LIMIT 2";
         var sqlCompetencia = "SELECT * FROM competencia WHERE id = ?";
+        var generoId = null;
 
         //se ejecuta la consulta
         con.query(sqlCompetencia, [competenciaId], function(error, competencias, fields) {
@@ -44,13 +45,17 @@ var competenciasControlador = {
                 console.log("No se encontro ninguna competencia con ese id");
                 return res.status(404).send("No se encontro ninguna competencia con ese id");
             }
-         
-            con.query(sqlPeliculas, function(error, peliculas, fields) {
+
+            generoId = competencias[0].genero_id;
+
+            con.query(sqlPeliculas, [generoId, generoId], function(error, peliculas, fields) {
                 //si hubo un error, se informa y se envía un mensaje de error
                 if (error) {
                     console.log("Hubo un error en la consulta", error.message);
                     return res.status(500).send("Hubo un error en la consulta");
                 }               
+
+                console.log(peliculas);
 
                 //si no hubo error, se crea el objeto respuesta con las canciones encontradas
                 var respuesta = {
@@ -112,6 +117,8 @@ var competenciasControlador = {
     obtenerResultados: function(req, res)
     {
         var idCompetencia = req.params.id;
+
+        
         // var sql = "select * from usuario where id = " + id;
         var sqlCompetencia = "SELECT * FROM competencia WHERE id = ?"
         var sqlResultados = 
@@ -219,7 +226,10 @@ var competenciasControlador = {
     buscarCompetencia: function(req, res)
     {
         var idCompetencia = req.params.id;
-        var sql = "select * from competencia where id = ?";
+        var sql = 
+            "SELECT competencia.nombre, genero.nombre as genero_nombre FROM competencia " +
+            "LEFT JOIN genero ON genero.id = genero_id " +
+            "where competencia.id = ?";
 
         con.query(sql, [idCompetencia], function(error, resultado, fields) {
             if (error) {
