@@ -103,7 +103,7 @@ var competenciasControlador = {
                     //     return res.status(404).send("No se encontro ninguna película con ese id");
                     // } 
                     
-                    res.send('Voto realizado con exito!');
+                    res.json('Voto realizado con exito!');
                 });
             });
         });
@@ -115,10 +115,11 @@ var competenciasControlador = {
         // var sql = "select * from usuario where id = " + id;
         var sqlCompetencia = "SELECT * FROM competencia WHERE id = ?"
         var sqlResultados = 
-            "select pelicula_id, poster, titulo, COUNT(*) as votos from voto " +
+            "SELECT pelicula_id, poster, titulo, COUNT(*) as votos from voto " +
             "JOIN pelicula ON pelicula_id = pelicula.id " +
-            "where competencia_id = ? " +
-            "GROUP BY competencia_id";
+            "WHERE competencia_id = ? " +
+            "GROUP BY pelicula_id " +
+            "ORDER BY COUNT(*) DESC LIMIT 3";
 
         con.query(sqlCompetencia, [idCompetencia], function(error, competencias, fields) {
             if (error) {
