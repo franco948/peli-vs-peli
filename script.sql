@@ -20,3 +20,6 @@ CREATE TABLE voto (
     FOREIGN KEY (competencia_id) REFERENCES competencia(id),
     FOREIGN KEY (pelicula_id) REFERENCES pelicula(id)
 );
+
+ALTER TABLE competencia ADD COLUMN genero_id int unsigned;
+ALTER TABLE competencia ADD FOREIGN KEY (genero_id) REFERENCES genero(id);
