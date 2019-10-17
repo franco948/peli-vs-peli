@@ -154,9 +154,15 @@ var competenciasControlador = {
     agregarCompetencia: function(req, res)
     {
         var nombre = req.body.nombre;
+        var generoId = req.body.genero;
+
+        if (generoId == 0)
+        {
+            generoId = null;
+        }
 
         var sqlValidarNombre = "SELECT * FROM competencia WHERE LOWER(nombre) = LOWER(?)";
-        var sqlAgregarCompetencia = "INSERT INTO competencia (nombre) VALUES (?)";
+        var sqlAgregarCompetencia = "INSERT INTO competencia (nombre, genero_id) VALUES (?,?)";
 
         con.query(sqlValidarNombre, [nombre], function(error, competencias, fields) {
             if (error) {
@@ -170,7 +176,7 @@ var competenciasControlador = {
                 return res.status(422).send("Ya existe una competencia con este nombre");
             }
 
-            con.query(sqlAgregarCompetencia, [nombre], function(error, resultado, fields)
+            con.query(sqlAgregarCompetencia, [nombre, generoId], function(error, resultado, fields)
             {
                 if (error) {
                     console.log("Hubo un error en la consulta", error.message);
@@ -186,8 +192,6 @@ var competenciasControlador = {
     {
         var idCompetencia = req.params.id;
 
-        console.log(idCompetencia);
-        
         var sqlCompetencia = "SELECT * FROM competencia WHERE id = ?";
         var sqlReiniciar = "DELETE FROM voto WHERE competencia_id = ?";
 
