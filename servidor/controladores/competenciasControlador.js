@@ -62,7 +62,53 @@ var competenciasControlador = {
                 res.json(respuesta);
             });
         });
+    },
+
+    votar: function(req, res) {
+
+        var idCompetencia = req.params.id;
+        var idPelicula = req.body.idPelicula;
+
+        var sqlCompetencia = "select * from competencia where id = ?";
+        var sqlPelicula = "select * from pelicula where id = ?";
+        var sqlVoto = "INSERT INTO voto (competencia_id, pelicula_id) VALUES (?, ?)";
+        
+        con.query(sqlCompetencia, [idCompetencia], function(error, competencias, fields) {
+            if (error) {
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(500).send("Hubo un error en la consulta");
+            }
+            if (competencias.length == 0) {
+                console.log("No se encontro ninguna competencia con ese id");
+                return res.status(404).send("No se encontro ninguna competencia con ese id");
+            } 
+
+            con.query(sqlPelicula, [idPelicula], function(error, peliculas, fields) {
+                if (error) {
+                    console.log("Hubo un error en la consulta", error.message);
+                    return res.status(500).send("Hubo un error en la consulta");
+                }
+                if (peliculas.length == 0) {
+                    console.log("No se encontro ninguna película con ese id");
+                    return res.status(404).send("No se encontro ninguna película con ese id");
+                } 
+    
+                con.query(sqlVoto, [idCompetencia, idPelicula], function(error, resultado, fields) {
+                    if (error) {
+                        console.log("Hubo un error en la consulta", error.message);
+                        return res.status(500).send("Hubo un error en la consulta");
+                    }
+                    // if (peliculas.length == 0) {
+                    //     console.log("No se encontro ninguna película con ese id");
+                    //     return res.status(404).send("No se encontro ninguna película con ese id");
+                    // } 
+                    
+                    res.send('Voto realizado con exito!');
+                });
+            });
+        });
     }
+    
 }
 
 module.exports = competenciasControlador;
