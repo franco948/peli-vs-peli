@@ -107,8 +107,48 @@ var competenciasControlador = {
                 });
             });
         });
-    }
+    },
+
+    obtenerResultados: function(req, res)
+    {
+        var idCompetencia = req.params.id;
+        // var sql = "select * from usuario where id = " + id;
+        var sqlCompetencia = "SELECT * FROM competencia WHERE id = ?"
+        var sqlResultados = 
+            "select pelicula_id, poster, titulo, COUNT(*) as votos from voto " +
+            "JOIN pelicula ON pelicula_id = pelicula.id " +
+            "where competencia_id = ? " +
+            "GROUP BY competencia_id";
+
+        con.query(sqlCompetencia, [idCompetencia], function(error, competencias, fields) {
+            if (error) {
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(500).send("Hubo un error en la consulta");
+            }
+            if (competencias.length == 0) {
+                console.log("No se encontro ninguna competencia con ese id");
+                return res.status(404).send("No se encontro ninguna competencia con ese id");
+            } 
+
+            con.query(sqlResultados, [idCompetencia], function(error, resultados, fields) {
+                if (error) {
+                    console.log("Hubo un error en la consulta", error.message);
+                    return res.status(500).send("Hubo un error en la consulta");
+                }
+                // if (resultados.length == 0) {
+                //     console.log("No se encontro ningún nombre con ese id");
+                //     return res.status(404).send("No se encontro ningún nombre con ese id");
+                // } else {
+                
+                var response = {
+                    'competencia': competencias[0].nombre,
+                    'resultados': resultados
+                };
     
+                res.send(JSON.stringify(response));
+            });
+        });
+    }
 }
 
 module.exports = competenciasControlador;
