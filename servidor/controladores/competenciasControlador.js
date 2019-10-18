@@ -265,7 +265,8 @@ var competenciasControlador = {
     {
         var idCompetencia = req.params.id;
         var sql = 
-            "SELECT competencia.nombre, genero.nombre as genero_nombre FROM competencia " +
+            "SELECT competencia.nombre, genero.nombre as genero_nombre, director.nombre as director_nombre FROM competencia " +
+            "LEFT JOIN director ON director.id = competencia.director_id " +
             "LEFT JOIN genero ON genero.id = genero_id " +
             "where competencia.id = ?";
 
