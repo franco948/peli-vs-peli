@@ -187,6 +187,11 @@ var competenciasControlador = {
 
         var sqlValidarNombre = "SELECT * FROM competencia WHERE LOWER(nombre) = LOWER(?)";
         var sqlAgregarCompetencia = "INSERT INTO competencia (nombre, genero_id, director_id) VALUES (?,?,?)";
+        var sqlPeliculas = 
+            "SELECT pelicula.id, pelicula.poster, pelicula.titulo FROM pelicula " +
+            "JOIN director ON director.nombre = pelicula.director " +
+            "WHERE (genero_id = ? OR ? IS null) AND (director.id = ? OR ? IS null) " +
+            "ORDER BY rand() LIMIT 2";
 
         con.query(sqlValidarNombre, [nombre], function(error, competencias, fields) {
             if (error) {
@@ -200,15 +205,31 @@ var competenciasControlador = {
                 return res.status(422).send("Ya existe una competencia con este nombre");
             }
 
-            con.query(sqlAgregarCompetencia, [nombre, generoId, directorId], function(error, resultado, fields)
-            {
+            var parametros = [generoId, generoId, directorId, directorId];
+
+            con.query(sqlPeliculas, parametros, function(error, peliculas, fields) {
+                //si hubo un error, se informa y se envía un mensaje de error
                 if (error) {
                     console.log("Hubo un error en la consulta", error.message);
                     return res.status(500).send("Hubo un error en la consulta");
                 }               
-        
-                res.send('Competencia agregada con exito!');
-            });
+
+                if (peliculas.length < 2)
+                {
+                    console.log("No se encontraron dos peliculas o mas con los filtros indicados");
+                    return res.status(422).send("No se encontraron dos peliculas o mas con los filtros indicados");
+                }
+
+                con.query(sqlAgregarCompetencia, [nombre, generoId, directorId], function(error, resultado, fields)
+                {
+                    if (error) {
+                        console.log("Hubo un error en la consulta", error.message);
+                        return res.status(500).send("Hubo un error en la consulta");
+                    }               
+            
+                    res.send('Competencia agregada con exito!');
+                });
+            });            
         });
     },
 
