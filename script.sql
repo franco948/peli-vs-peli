@@ -23,3 +23,6 @@ CREATE TABLE voto (
 
 ALTER TABLE competencia ADD COLUMN genero_id int unsigned;
 ALTER TABLE competencia ADD FOREIGN KEY (genero_id) REFERENCES genero(id);
+
+ALTER TABLE competencia ADD COLUMN director_id int unsigned;
+ALTER TABLE competencia ADD FOREIGN KEY (director_id) REFERENCES director(id);
