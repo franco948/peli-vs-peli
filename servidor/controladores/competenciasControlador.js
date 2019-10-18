@@ -162,14 +162,20 @@ var competenciasControlador = {
     {
         var nombre = req.body.nombre;
         var generoId = req.body.genero;
+        var directorId = req.body.director;
 
         if (generoId == 0)
         {
             generoId = null;
         }
 
+        if (directorId == 0)
+        {
+            directorId = null;
+        }
+
         var sqlValidarNombre = "SELECT * FROM competencia WHERE LOWER(nombre) = LOWER(?)";
-        var sqlAgregarCompetencia = "INSERT INTO competencia (nombre, genero_id) VALUES (?,?)";
+        var sqlAgregarCompetencia = "INSERT INTO competencia (nombre, genero_id, director_id) VALUES (?,?,?)";
 
         con.query(sqlValidarNombre, [nombre], function(error, competencias, fields) {
             if (error) {
@@ -183,7 +189,7 @@ var competenciasControlador = {
                 return res.status(422).send("Ya existe una competencia con este nombre");
             }
 
-            con.query(sqlAgregarCompetencia, [nombre, generoId], function(error, resultado, fields)
+            con.query(sqlAgregarCompetencia, [nombre, generoId, directorId], function(error, resultado, fields)
             {
                 if (error) {
                     console.log("Hubo un error en la consulta", error.message);
@@ -271,7 +277,7 @@ var competenciasControlador = {
                 console.log("Hubo un error en la consulta", error.message);
                 return res.status(500).send("Hubo un error en la consulta");
             }
-            
+
             var response = resultado;
 
             res.send(JSON.stringify(response));
