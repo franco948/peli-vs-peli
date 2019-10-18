@@ -260,7 +260,23 @@ var competenciasControlador = {
 
             res.send(JSON.stringify(response));
         });
-    }
+    },
+
+    obtenerDirectores: function(req, res)
+    {
+        var sql = "select * from director";
+
+        con.query(sql, function(error, resultado, fields) {
+            if (error) {
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(500).send("Hubo un error en la consulta");
+            }
+            
+            var response = resultado;
+
+            res.send(JSON.stringify(response));
+        });
+    },
 }
 
 module.exports = competenciasControlador;

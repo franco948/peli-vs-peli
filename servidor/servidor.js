@@ -26,6 +26,7 @@ app.post('/competencias', competenciasControlador.agregarCompetencia);
 app.delete('/competencias/:id/votos', competenciasControlador.reiniciarCompetencia);
 app.get('/competencias/:id', competenciasControlador.buscarCompetencia);
 app.get('/generos', competenciasControlador.obtenerGeneros);
+app.get('/directores', competenciasControlador.obtenerDirectores);
 
 //seteamos el puerto en el cual va a escuchar los pedidos la aplicación
 var puerto = '8080';
