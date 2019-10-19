@@ -10,7 +10,7 @@ INSERT INTO competencia (nombre) VALUES
     ('¿Cual es la mas aburrida?'),
     ('¿Cual tiene los mejores efectos especiales?'),
     ('¿Que pelicula te gusto mas?'),
-    ('¿Cual tiene el mejor guion?')
+    ('¿Cual tiene el mejor guion?');
 
 CREATE TABLE voto (
     id int AUTO_INCREMENT,
