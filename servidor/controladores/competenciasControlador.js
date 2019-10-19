@@ -275,10 +275,11 @@ var competenciasControlador = {
     {
         var idCompetencia = req.params.id;
         var sql = 
-            "SELECT competencia.nombre, genero.nombre as genero_nombre, director.nombre as director_nombre FROM competencia " +
+            "SELECT competencia.nombre, genero.nombre as genero_nombre, director.nombre as director_nombre, actor.nombre as actor_nombre FROM competencia " +
             "LEFT JOIN director ON director.id = competencia.director_id " +
             "LEFT JOIN genero ON genero.id = genero_id " +
-            "where competencia.id = ?";
+            "LEFT JOIN actor ON actor_id = actor.id " +
+            "WHERE competencia.id = ?";
 
         con.query(sql, [idCompetencia], function(error, resultado, fields) {
             if (error) {
@@ -291,6 +292,8 @@ var competenciasControlador = {
             }
 
             var response = resultado[0];
+
+            console.log(resultado);
 
             res.send(JSON.stringify(response));
         });
