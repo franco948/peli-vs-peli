@@ -345,6 +345,42 @@ var competenciasControlador = {
             res.send(JSON.stringify(response));
         });
     },
+
+    eliminarCompetencia: function(req, res)
+    {
+        var idCompetencia = req.params.id;
+        var sqlValidar = "SELECT * FROM competencia WHERE id = ?";
+        var sqlVoto = "DELETE FROM voto WHERE competencia_id = ?";
+        var sqlCompetencia = "DELETE FROM competencia WHERE id = ?";
+
+        con.query(sqlValidar, [idCompetencia], function(error, competencias, fields) {
+            if (error) {
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(500).send("Hubo un error en la consulta");
+            }
+
+            if (competencias.length == 0) {
+                console.log("No se encontro ninguna competencia con ese id");
+                return res.status(404).send("No se encontro ninguna competencia con ese id");
+            } 
+            
+            con.query(sqlVoto, [idCompetencia], function(error, resultado, fields) {
+                if (error) {
+                    console.log("Hubo un error en la consulta", error.message);
+                    return res.status(500).send("Hubo un error en la consulta");
+                }
+
+                con.query(sqlCompetencia, [idCompetencia], function(error, resultado, fields) {
+                    if (error) {
+                        console.log("Hubo un error en la consulta", error.message);
+                        return res.status(500).send("Hubo un error en la consulta");
+                    }                   
+        
+                    res.send(JSON.stringify(resultado))
+                }); 
+            });    
+        });
+    }
 }
 
 module.exports = competenciasControlador;
