@@ -26,3 +26,6 @@ ALTER TABLE competencia ADD FOREIGN KEY (genero_id) REFERENCES genero(id);
 
 ALTER TABLE competencia ADD COLUMN director_id int unsigned;
 ALTER TABLE competencia ADD FOREIGN KEY (director_id) REFERENCES director(id);
+
+ALTER TABLE competencia ADD COLUMN actor_id int unsigned;
+ALTER TABLE competencia ADD FOREIGN KEY (actor_id) REFERENCES actor(id);
