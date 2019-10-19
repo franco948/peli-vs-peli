@@ -380,6 +380,35 @@ var competenciasControlador = {
                 }); 
             });    
         });
+    },
+
+    editarCompetencia: function(req, res)
+    {
+        var idCompetencia = req.params.id;
+        var nuevoNombre = req.body.nombre;
+        var sqlCompetencia = "select * from competencia where id = ?";
+        var sqlEditar = "UPDATE competencia SET nombre = ? WHERE id = ?";
+
+        con.query(sqlCompetencia, [idCompetencia], function(error, competencias, fields) {
+            if (error) {
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(500).send("Hubo un error en la consulta");
+            }
+
+            if (competencias.length == 0) {
+                console.log("No se encontro ningún nombre con ese id");
+                return res.status(404).send("No se encontro ningún nombre con ese id");
+            }
+            
+            con.query(sqlEditar, [nuevoNombre, idCompetencia], function(error, resultado, fields) {
+                if (error) {
+                    console.log("Hubo un error en la consulta", error.message);
+                    return res.status(500).send("Hubo un error en la consulta");
+                }
+    
+                res.send(JSON.stringify(resultado));
+            });
+        });
     }
 }
 

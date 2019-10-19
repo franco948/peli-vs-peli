@@ -29,6 +29,7 @@ app.get('/generos', competenciasControlador.obtenerGeneros);
 app.get('/directores', competenciasControlador.obtenerDirectores);
 app.get('/actores', competenciasControlador.obtenerActores);
 app.delete('/competencias/:id', competenciasControlador.eliminarCompetencia);
+app.put('/competencias/:id', competenciasControlador.editarCompetencia);
 
 
 //seteamos el puerto en el cual va a escuchar los pedidos la aplicación
