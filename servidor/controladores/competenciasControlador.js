@@ -174,6 +174,7 @@ var competenciasControlador = {
         var nombre = req.body.nombre;
         var generoId = req.body.genero;
         var directorId = req.body.director;
+        var actorId = req.body.actor;
 
         if (generoId == 0)
         {
@@ -185,12 +186,18 @@ var competenciasControlador = {
             directorId = null;
         }
 
+        if (actorId == 0)
+        {
+            actorId = null;
+        }
+
         var sqlValidarNombre = "SELECT * FROM competencia WHERE LOWER(nombre) = LOWER(?)";
-        var sqlAgregarCompetencia = "INSERT INTO competencia (nombre, genero_id, director_id) VALUES (?,?,?)";
+        var sqlAgregarCompetencia = "INSERT INTO competencia (nombre, genero_id, director_id, actor_id) VALUES (?,?,?,?)";
         var sqlPeliculas = 
             "SELECT pelicula.id, pelicula.poster, pelicula.titulo FROM pelicula " +
             "JOIN director ON director.nombre = pelicula.director " +
-            "WHERE (genero_id = ? OR ? IS null) AND (director.id = ? OR ? IS null) " +
+            "JOIN actor_pelicula ON pelicula_id = pelicula.id " +
+            "WHERE (genero_id = ? OR ? IS null) AND (director.id = ? OR ? IS null) AND (actor_id = ? OR ? IS null) " +
             "ORDER BY rand() LIMIT 2";
 
         con.query(sqlValidarNombre, [nombre], function(error, competencias, fields) {
@@ -205,7 +212,7 @@ var competenciasControlador = {
                 return res.status(422).send("Ya existe una competencia con este nombre");
             }
 
-            var parametros = [generoId, generoId, directorId, directorId];
+            var parametros = [generoId, generoId, directorId, directorId, actorId, actorId];
 
             con.query(sqlPeliculas, parametros, function(error, peliculas, fields) {
                 //si hubo un error, se informa y se envía un mensaje de error
@@ -220,7 +227,7 @@ var competenciasControlador = {
                     return res.status(422).send("No se encontraron dos peliculas o mas con los filtros indicados");
                 }
 
-                con.query(sqlAgregarCompetencia, [nombre, generoId, directorId], function(error, resultado, fields)
+                con.query(sqlAgregarCompetencia, [nombre, generoId, directorId, actorId], function(error, resultado, fields)
                 {
                     if (error) {
                         console.log("Hubo un error en la consulta", error.message);
