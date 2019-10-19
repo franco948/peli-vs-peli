@@ -30,14 +30,16 @@ var competenciasControlador = {
     {
         var competenciaId = req.params.id;
         var sqlPeliculas = 
-            "SELECT pelicula.id, pelicula.poster, pelicula.titulo FROM pelicula " +
+            "SELECT DISTINCT pelicula.id, pelicula.poster, pelicula.titulo FROM pelicula " +
             "JOIN director ON director.nombre = pelicula.director " +
-            "WHERE (genero_id = ? OR ? IS null) AND (director.id = ? OR ? IS null) " +
+            "LEFT JOIN actor_pelicula ON pelicula.id = pelicula_id AND actor_id = ? " + 
+            "WHERE (genero_id = ? OR ? IS null) AND (director.id = ? OR ? IS null) AND (actor_id = ? OR ? IS NULL) " +
             "ORDER BY rand() LIMIT 2";
 
         var sqlCompetencia = "SELECT * FROM competencia WHERE id = ?";
         var generoId = null;
         var directorId = null;
+        var actorId = null;
 
         //se ejecuta la consulta
         con.query(sqlCompetencia, [competenciaId], function(error, competencias, fields) {
@@ -54,10 +56,11 @@ var competenciasControlador = {
 
             generoId = competencias[0].genero_id;
             directorId = competencias[0].director_id;
+            actorId = competencias[0].actor_id;
 
             console.log(competencias);
 
-            var parametros = [generoId, generoId, directorId, directorId];
+            var parametros = [actorId, generoId, generoId, directorId, directorId, actorId, actorId];
 
             con.query(sqlPeliculas, parametros, function(error, peliculas, fields) {
                 //si hubo un error, se informa y se envía un mensaje de error
