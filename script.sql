@@ -1,4 +1,6 @@
 
+USE competencias;
+
 CREATE TABLE competencia (
     id int AUTO_INCREMENT,
     nombre varchar(100),
