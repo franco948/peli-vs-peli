@@ -1,6 +1,8 @@
 
 var mysql      = require('mysql');
 
+console.log(process.env.DB_HOST)
+
 var connection = mysql.createConnection({
   host     : process.env.DB_HOST,
   port     : process.env.DB_PORT,
